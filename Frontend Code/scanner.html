@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scanner Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Scanner Dashboard</h1>
+        <form id="uploadForm">
+            <div class="form-group">
+                <label for="file_name">File Name:</label>
+                <input type="text" id="file_name" name="file_name" required>
+            </div>
+            <div class="form-group">
+                <label for="file">File (PDF only):</label>
+                <input type="file" id="file" name="file" accept=".jpg" required>
+            </div>
+            <div class="form-group">
+                <label for="shelf_number">Shelf Number:</label>
+                <input type="text" id="shelf_number" name="shelf_number" required>
+            </div>
+            <button type="submit">Upload File</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const formData = new FormData();
+            formData.append('file_name', document.getElementById('file_name').value);
+            formData.append('file', document.getElementById('file').files[0]);
+            formData.append('shelf_number', document.getElementById('shelf_number').value);
+
+            fetch('http://127.0.0.1:5000/add_file', {
+    method: 'POST',
+    body: formData,
+    credentials: 'include'  // This ensures cookies are included with the request
+})
+.then(response => response.json())
+.then(data => {
+    alert(data.message);  // Display server message
+})
+.catch(error => {
+    console.error('Error:', error);
+    alert('An error occurred while uploading the file');
+});
+
+        });
+    </script>
+</body>
+</html>
